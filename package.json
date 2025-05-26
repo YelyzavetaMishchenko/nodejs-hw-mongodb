@@ -1,0 +1,36 @@
+{
+  "name": "nodejs-hw-mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YelyzavetaMishchenko/nodejs-hw-mongodb.git"
+  },
+  "keywords": [],
+  "author": "Yelyzaveta Mishchenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YelyzavetaMishchenko/nodejs-hw-mongodb/issues"
+  },
+  "homepage": "https://github.com/YelyzavetaMishchenko/nodejs-hw-mongodb#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "http-errors": "^2.0.0",
+    "mongoose": "^8.15.0",
+    "pino-http": "^8.6.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.2.0",
+    "nodemon": "^3.1.10"
+  }
+}
