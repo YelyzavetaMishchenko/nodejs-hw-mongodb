@@ -51,9 +51,18 @@ export const getContactById = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findById(contactId);
   if (!result) {
-    return res.status(404).json({ message: 'Contact not found' });
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
-  res.status(200).json(result);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Success',
+    data: result,
+  });
 };
 
 export const createContact = async (req, res) => {
@@ -65,9 +74,14 @@ export const deleteContact = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findByIdAndDelete(contactId);
   if (!result) {
-    return res.status(404).json({ message: 'Contact not found' });
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
-  res.status(200).json({ message: 'Contact deleted' });
+
+  res.status(204).send(); // No Content
 };
 
 export const updateContact = async (req, res) => {
@@ -76,7 +90,16 @@ export const updateContact = async (req, res) => {
     new: true,
   });
   if (!result) {
-    return res.status(404).json({ message: 'Contact not found' });
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
-  res.status(200).json(result);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Contact updated successfully',
+    data: result,
+  });
 };
