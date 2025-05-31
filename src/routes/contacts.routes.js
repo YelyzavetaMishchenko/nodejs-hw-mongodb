@@ -1,16 +1,17 @@
 import express from 'express';
 import * as ctrl from '../controllers/contacts.controller.js';
-
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
 import {
   addContactSchema,
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
 
 const router = express.Router();
+
+router.use(authenticate);
 
 router.get('/', ctrlWrapper(ctrl.getAllContacts));
 
