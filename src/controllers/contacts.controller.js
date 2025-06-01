@@ -41,7 +41,7 @@ export const deleteContact = async (req, res) => {
     throw createHttpError(404, 'Not found');
   }
 
-  res.json({ message: 'Contact deleted' });
+  res.status(200).json({ message: 'contact deleted' });
 };
 
 export const updateContact = async (req, res) => {
