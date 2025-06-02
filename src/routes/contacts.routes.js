@@ -35,6 +35,13 @@ router.put(
 );
 
 router.patch(
+  '/:contactId',
+  isValidId,
+  validateBody(updateContactSchema),
+  ctrlWrapper(ctrl.updateContact),
+);
+
+router.patch(
   '/:contactId/favorite',
   isValidId,
   validateBody(updateStatusSchema),
