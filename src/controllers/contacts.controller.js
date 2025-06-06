@@ -1,4 +1,5 @@
 import { Contact } from '../models/contact.model.js';
+import { cloudinary } from '../services/cloudinary.js';
 
 export const getAllContacts = async (req, res) => {
   const {
@@ -71,15 +72,25 @@ export const getContactById = async (req, res) => {
 };
 
 export const createContact = async (req, res) => {
-  const result = await Contact.create({
+  let photoUrl = null;
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'contacts',
+    });
+    photoUrl = result.secure_url;
+  }
+
+  const contact = await Contact.create({
     ...req.body,
+    photo: photoUrl,
     userId: req.user._id,
   });
 
   res.status(201).json({
     status: 201,
     message: 'Contact created successfully',
-    data: result,
+    data: contact,
   });
 };
 
@@ -99,15 +110,29 @@ export const deleteContact = async (req, res) => {
     });
   }
 
-  res.status(204).send(); // No Content
+  res.status(204).send();
 };
 
 export const updateContact = async (req, res) => {
   const { contactId } = req.params;
 
+  let photoUrl = null;
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'contacts',
+    });
+    photoUrl = result.secure_url;
+  }
+
+  const updateData = { ...req.body };
+  if (photoUrl) {
+    updateData.photo = photoUrl;
+  }
+
   const result = await Contact.findOneAndUpdate(
     { _id: contactId, userId: req.user._id },
-    req.body,
+    updateData,
     { new: true },
   );
 

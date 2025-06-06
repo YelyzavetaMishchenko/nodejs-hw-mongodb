@@ -10,6 +10,7 @@ import {
   updateContactSchema,
   updateStatusSchema,
 } from '../schemas/contactsSchemas.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.get('/:contactId', isValidId, ctrlWrapper(ctrl.getContactById));
 
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(addContactSchema),
   ctrlWrapper(ctrl.createContact),
 );
@@ -30,6 +32,7 @@ router.delete('/:contactId', isValidId, ctrlWrapper(ctrl.deleteContact));
 router.put(
   '/:contactId',
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(ctrl.updateContact),
 );
@@ -37,6 +40,7 @@ router.put(
 router.patch(
   '/:contactId',
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(ctrl.updateContact),
 );
