@@ -10,7 +10,6 @@ import {
 } from '../controllers/auth.controller.js';
 
 import { registerSchema, loginSchema } from '../schemas/authSchemas.js';
-
 import {
   sendResetEmailSchema,
   resetPasswordSchema,

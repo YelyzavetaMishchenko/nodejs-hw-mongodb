@@ -1,152 +1,107 @@
+import createHttpError from 'http-errors';
 import { Contact } from '../models/contact.model.js';
-import { cloudinary } from '../services/cloudinary.js';
 
 export const getAllContacts = async (req, res) => {
-  const {
-    page = 1,
-    perPage = 10,
-    sortBy = 'name',
-    sortOrder = 'asc',
-    type,
-    isFavourite,
-  } = req.query;
-
-  const pageNumber = parseInt(page);
-  const limit = parseInt(perPage);
-  const skip = (pageNumber - 1) * limit;
-
-  const sortDirection = sortOrder === 'desc' ? -1 : 1;
-  const sort = { [sortBy]: sortDirection };
-
-  const filter = { userId: req.user._id };
-  if (type) {
-    filter.contactType = type;
-  }
-  if (isFavourite !== undefined) {
-    filter.isFavourite = isFavourite === 'true';
-  }
-
-  const totalItems = await Contact.countDocuments(filter);
-  const totalPages = Math.ceil(totalItems / limit);
-  const contacts = await Contact.find(filter)
-    .sort(sort)
-    .skip(skip)
-    .limit(limit);
-
+  const contacts = await Contact.find({ owner: req.user._id });
   res.status(200).json({
     status: 200,
-    message: 'Successfully found contacts!',
-    data: {
-      data: contacts,
-      page: pageNumber,
-      perPage: limit,
-      totalItems,
-      totalPages,
-      hasPreviousPage: pageNumber > 1,
-      hasNextPage: pageNumber < totalPages,
-    },
+    message: 'Successfully found all contacts!',
+    data: contacts,
   });
 };
 
 export const getContactById = async (req, res) => {
-  const { contactId } = req.params;
-
-  const result = await Contact.findOne({
-    _id: contactId,
-    userId: req.user._id,
+  const contact = await Contact.findOne({
+    _id: req.params.contactId,
+    owner: req.user._id,
   });
 
-  if (!result) {
-    return res.status(404).json({
-      status: 404,
-      message: 'Contact not found',
-      data: null,
-    });
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found!');
   }
 
   res.status(200).json({
     status: 200,
-    message: 'Success',
-    data: result,
+    message: 'Successfully found a contact!',
+    data: contact,
   });
 };
 
 export const createContact = async (req, res) => {
-  let photoUrl = null;
+  const { name, email, phone, favorite } = req.body;
+  const photo = req.file?.path || '';
 
-  if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'contacts',
-    });
-    photoUrl = result.secure_url;
-  }
-
-  const contact = await Contact.create({
-    ...req.body,
-    photo: photoUrl,
-    userId: req.user._id,
+  const newContact = await Contact.create({
+    name,
+    email,
+    phone,
+    favorite,
+    photo,
+    owner: req.user._id,
   });
 
   res.status(201).json({
     status: 201,
-    message: 'Contact created successfully',
+    message: 'Successfully created a contact!',
+    data: newContact,
+  });
+};
+
+export const updateContact = async (req, res) => {
+  const contact = await Contact.findOne({
+    _id: req.params.contactId,
+    owner: req.user._id,
+  });
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found!');
+  }
+
+  if (req.file?.path) {
+    contact.photo = req.file.path;
+  }
+
+  Object.assign(contact, req.body);
+  await contact.save();
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully updated a contact!',
+    data: contact,
+  });
+};
+
+export const updateStatusContact = async (req, res) => {
+  const contact = await Contact.findOneAndUpdate(
+    { _id: req.params.contactId, owner: req.user._id },
+    req.body,
+    { new: true },
+  );
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found!');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully updated the contact status!',
     data: contact,
   });
 };
 
 export const deleteContact = async (req, res) => {
-  const { contactId } = req.params;
-
-  const result = await Contact.findOneAndDelete({
-    _id: contactId,
-    userId: req.user._id,
+  const contact = await Contact.findOneAndDelete({
+    _id: req.params.contactId,
+    owner: req.user._id,
   });
 
-  if (!result) {
-    return res.status(404).json({
-      status: 404,
-      message: 'Contact not found',
-      data: null,
-    });
-  }
-
-  res.status(204).send();
-};
-
-export const updateContact = async (req, res) => {
-  const { contactId } = req.params;
-
-  let photoUrl = null;
-
-  if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'contacts',
-    });
-    photoUrl = result.secure_url;
-  }
-
-  const updateData = { ...req.body };
-  if (photoUrl) {
-    updateData.photo = photoUrl;
-  }
-
-  const result = await Contact.findOneAndUpdate(
-    { _id: contactId, userId: req.user._id },
-    updateData,
-    { new: true },
-  );
-
-  if (!result) {
-    return res.status(404).json({
-      status: 404,
-      message: 'Contact not found',
-      data: null,
-    });
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found!');
   }
 
   res.status(200).json({
     status: 200,
-    message: 'Contact updated successfully',
-    data: result,
+    message: 'Successfully deleted a contact!',
+    data: contact,
   });
 };

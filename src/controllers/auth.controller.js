@@ -1,4 +1,7 @@
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+
 import {
   registerUser,
   loginUser,
@@ -7,9 +10,6 @@ import {
 } from '../services/auth.service.js';
 
 import { registerSchema, loginSchema } from '../schemas/authSchemas.js';
-
-import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import { User } from '../models/user.model.js';
 import { Session } from '../models/session.model.js';
 
@@ -124,15 +124,12 @@ export const sendResetEmail = async (req, res) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch {
-    throw createHttpError(
-      500,
-      'Failed to send the email, please try again later.',
-    );
+    throw createHttpError(500, 'Failed to send the email.');
   }
 
   res.status(200).json({
     status: 200,
-    message: 'Reset password email has been successfully sent.',
+    message: 'Reset password email sent.',
     data: {},
   });
 };
@@ -155,7 +152,7 @@ export const resetPassword = async (req, res) => {
   user.password = password;
   await user.save();
 
-  await Session.deleteMany({ uid: user._id });
+  await Session.deleteMany({ userId: user._id });
 
   res.status(200).json({
     status: 200,
