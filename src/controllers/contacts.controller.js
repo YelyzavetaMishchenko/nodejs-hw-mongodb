@@ -28,14 +28,15 @@ export const getContactById = async (req, res) => {
 };
 
 export const createContact = async (req, res) => {
-  const { name, email, phone, favorite } = req.body;
+  const { name, email, phoneNumber, isFavourite, contactType } = req.body;
   const photo = req.file?.path || '';
 
   const newContact = await Contact.create({
     name,
     email,
-    phone,
-    favorite,
+    phoneNumber,
+    isFavourite,
+    contactType,
     photo,
     owner: req.user._id,
   });
@@ -61,7 +62,14 @@ export const updateContact = async (req, res) => {
     contact.photo = req.file.path;
   }
 
-  Object.assign(contact, req.body);
+  const { name, email, phoneNumber, isFavourite, contactType } = req.body;
+
+  if (name !== undefined) contact.name = name;
+  if (email !== undefined) contact.email = email;
+  if (phoneNumber !== undefined) contact.phoneNumber = phoneNumber;
+  if (isFavourite !== undefined) contact.isFavourite = isFavourite;
+  if (contactType !== undefined) contact.contactType = contactType;
+
   await contact.save();
 
   res.status(200).json({
@@ -74,7 +82,7 @@ export const updateContact = async (req, res) => {
 export const updateStatusContact = async (req, res) => {
   const contact = await Contact.findOneAndUpdate(
     { _id: req.params.contactId, owner: req.user._id },
-    req.body,
+    { isFavourite: req.body.isFavourite },
     { new: true },
   );
 
