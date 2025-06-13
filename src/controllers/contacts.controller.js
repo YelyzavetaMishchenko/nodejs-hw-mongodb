@@ -3,6 +3,7 @@ import { Contact } from '../models/contact.model.js';
 
 export const getAllContacts = async (req, res) => {
   const contacts = await Contact.find({ owner: req.user._id });
+
   res.status(200).json({
     status: 200,
     message: 'Successfully found all contacts!',
@@ -23,7 +24,7 @@ export const getContactById = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully found a contact!',
-    data: contact,
+    data: { contact }, // ✅ исправлено по фидбеку
   });
 };
 
@@ -38,7 +39,7 @@ export const createContact = async (req, res) => {
     isFavourite,
     contactType,
     photo,
-    owner: req.user._id,
+    owner: req.user._id, // ✅ поле owner как userId
   });
 
   res.status(201).json({
