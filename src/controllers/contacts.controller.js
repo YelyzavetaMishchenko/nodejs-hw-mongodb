@@ -1,8 +1,18 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../models/contact.model.js';
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await Contact.find({ owner: req.user._id });
+  const contacts = await Contact.find({ userId: req.user._id });
 
   res.status(200).json({
     status: 200,
@@ -14,7 +24,7 @@ export const getAllContacts = async (req, res) => {
 export const getContactById = async (req, res) => {
   const contact = await Contact.findOne({
     _id: req.params.contactId,
-    owner: req.user._id,
+    userId: req.user._id,
   });
 
   if (!contact) {
@@ -24,13 +34,20 @@ export const getContactById = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully found a contact!',
-    data: { contact }, // ✅ исправлено по фидбеку
+    data: { contact },
   });
 };
 
 export const createContact = async (req, res) => {
   const { name, email, phoneNumber, isFavourite, contactType } = req.body;
-  const photo = req.file?.path || '';
+
+  let photo = '';
+  if (req.file?.path) {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'contacts',
+    });
+    photo = uploadResult.secure_url;
+  }
 
   const newContact = await Contact.create({
     name,
@@ -39,7 +56,7 @@ export const createContact = async (req, res) => {
     isFavourite,
     contactType,
     photo,
-    owner: req.user._id, // ✅ поле owner как userId
+    userId: req.user._id,
   });
 
   res.status(201).json({
@@ -52,7 +69,7 @@ export const createContact = async (req, res) => {
 export const updateContact = async (req, res) => {
   const contact = await Contact.findOne({
     _id: req.params.contactId,
-    owner: req.user._id,
+    userId: req.user._id,
   });
 
   if (!contact) {
@@ -60,7 +77,10 @@ export const updateContact = async (req, res) => {
   }
 
   if (req.file?.path) {
-    contact.photo = req.file.path;
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'contacts',
+    });
+    contact.photo = uploadResult.secure_url;
   }
 
   const { name, email, phoneNumber, isFavourite, contactType } = req.body;
@@ -82,7 +102,7 @@ export const updateContact = async (req, res) => {
 
 export const updateStatusContact = async (req, res) => {
   const contact = await Contact.findOneAndUpdate(
-    { _id: req.params.contactId, owner: req.user._id },
+    { _id: req.params.contactId, userId: req.user._id },
     { isFavourite: req.body.isFavourite },
     { new: true },
   );
@@ -101,7 +121,7 @@ export const updateStatusContact = async (req, res) => {
 export const deleteContact = async (req, res) => {
   const contact = await Contact.findOneAndDelete({
     _id: req.params.contactId,
-    owner: req.user._id,
+    userId: req.user._id,
   });
 
   if (!contact) {
