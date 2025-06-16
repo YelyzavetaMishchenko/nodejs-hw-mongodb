@@ -12,35 +12,76 @@ cloudinary.config({
 });
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await Contact.find({ userId: req.user._id });
+  const {
+    page = 1,
+    perPage = 10,
+    sortBy = 'name',
+    sortOrder = 'asc',
+    type,
+    isFavourite,
+  } = req.query;
+
+  const pageNumber = parseInt(page);
+  const limit = parseInt(perPage);
+  const skip = (pageNumber - 1) * limit;
+
+  const sortDirection = sortOrder === 'desc' ? -1 : 1;
+  const sort = { [sortBy]: sortDirection };
+
+  const filter = { userId: req.user._id };
+  if (type) {
+    filter.contactType = type;
+  }
+  if (isFavourite !== undefined) {
+    filter.isFavourite = isFavourite === 'true';
+  }
+
+  const totalItems = await Contact.countDocuments(filter);
+  const totalPages = Math.ceil(totalItems / limit);
+  const contacts = await Contact.find(filter)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit);
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully found all contacts!',
-    data: contacts,
+    message: 'Successfully found contacts!',
+    data: {
+      data: contacts,
+      page: pageNumber,
+      perPage: limit,
+      totalItems,
+      totalPages,
+      hasPreviousPage: pageNumber > 1,
+      hasNextPage: pageNumber < totalPages,
+    },
   });
 };
 
 export const getContactById = async (req, res) => {
-  const contact = await Contact.findOne({
-    _id: req.params.contactId,
+  const { contactId } = req.params;
+
+  const result = await Contact.findOne({
+    _id: contactId,
     userId: req.user._id,
   });
 
-  if (!contact) {
-    throw createHttpError(404, 'Contact not found!');
+  if (!result) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully found a contact!',
-    data: { contact },
+    message: 'Success',
+    data: result,
   });
 };
 
 export const createContact = async (req, res) => {
-  const { name, email, phoneNumber, isFavourite, contactType } = req.body;
-
   let photo = '';
   if (req.file?.path) {
     const uploadResult = await cloudinary.uploader.upload(req.file.path, {
@@ -49,31 +90,33 @@ export const createContact = async (req, res) => {
     photo = uploadResult.secure_url;
   }
 
-  const newContact = await Contact.create({
-    name,
-    email,
-    phoneNumber,
-    isFavourite,
-    contactType,
+  const result = await Contact.create({
+    ...req.body,
     photo,
     userId: req.user._id,
   });
 
   res.status(201).json({
     status: 201,
-    message: 'Successfully created a contact!',
-    data: newContact,
+    message: 'Contact created successfully',
+    data: result,
   });
 };
 
 export const updateContact = async (req, res) => {
+  const { contactId } = req.params;
+
   const contact = await Contact.findOne({
-    _id: req.params.contactId,
+    _id: contactId,
     userId: req.user._id,
   });
 
   if (!contact) {
-    throw createHttpError(404, 'Contact not found!');
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
 
   if (req.file?.path) {
@@ -95,7 +138,7 @@ export const updateContact = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully updated a contact!',
+    message: 'Contact updated successfully',
     data: contact,
   });
 };
@@ -119,18 +162,20 @@ export const updateStatusContact = async (req, res) => {
 };
 
 export const deleteContact = async (req, res) => {
-  const contact = await Contact.findOneAndDelete({
-    _id: req.params.contactId,
+  const { contactId } = req.params;
+
+  const result = await Contact.findOneAndDelete({
+    _id: contactId,
     userId: req.user._id,
   });
 
-  if (!contact) {
-    throw createHttpError(404, 'Contact not found!');
+  if (!result) {
+    return res.status(404).json({
+      status: 404,
+      message: 'Contact not found',
+      data: null,
+    });
   }
 
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully deleted a contact!',
-    data: contact,
-  });
+  res.status(204).send();
 };
