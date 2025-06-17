@@ -1,0 +1,63 @@
+tags:
+  - Contacts
+summary: Get list of contacts
+operationId: getContacts
+description: Retrieve a paginated list of user's contacts
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    required: false
+    schema:
+      type: integer
+      example: 1
+    description: Page number for pagination
+  - name: limit
+    in: query
+    required: false
+    schema:
+      type: integer
+      example: 10
+    description: Number of contacts per page
+  - name: favorite
+    in: query
+    required: false
+    schema:
+      type: boolean
+      example: true
+    description: Filter contacts by favorite status
+responses:
+  '200':
+    description: List of contacts
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: Contacts retrieved successfully
+            data:
+              type: object
+              properties:
+                contacts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      phone:
+                        type: string
+                      favorite:
+                        type: boolean
+  '401':
+    description: Unauthorized

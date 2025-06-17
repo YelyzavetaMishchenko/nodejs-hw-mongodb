@@ -1,0 +1,58 @@
+tags:
+  - Contacts
+summary: Update contact by ID
+operationId: updateContactById
+description: Update an existing contact using its ID
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: The ID of the contact to update
+    schema:
+      type: string
+      example: 64b167857c7c4dbf7c4aefb2
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: John Doe
+          email:
+            type: string
+            format: email
+            example: john@example.com
+          phone:
+            type: string
+            example: '+1234567890'
+          favorite:
+            type: boolean
+            example: true
+responses:
+  '200':
+    description: Contact updated
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: Contact updated successfully
+            data:
+              type: object
+              properties:
+                contact:
+                  type: object
+  '400':
+    description: Invalid input
+  '404':
+    description: Contact not found

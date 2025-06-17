@@ -1,0 +1,52 @@
+tags:
+  - Contacts
+summary: Get contact by ID
+operationId: getContactById
+description: Retrieve a contact by its unique ID
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: The ID of the contact
+    schema:
+      type: string
+      example: 64b167857c7c4dbf7c4aefb2
+responses:
+  '200':
+    description: Contact found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: Contact found
+            data:
+              type: object
+              properties:
+                contact:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 64b167857c7c4dbf7c4aefb2
+                    name:
+                      type: string
+                      example: John Doe
+                    email:
+                      type: string
+                      example: john@example.com
+                    phone:
+                      type: string
+                      example: '+1234567890'
+                    favorite:
+                      type: boolean
+                      example: false
+  '404':
+    description: Contact not found
