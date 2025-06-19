@@ -14,18 +14,5 @@ parameters:
       type: string
       example: 64b167857c7c4dbf7c4aefb2
 responses:
-  '200':
-    description: Contact deleted successfully
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: string
-              example: success
-            message:
-              type: string
-              example: Contact deleted successfully
-  '404':
-    description: Contact not found
+  '204':
+    description: Contact deleted successfully, no content returned

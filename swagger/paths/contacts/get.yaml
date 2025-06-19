@@ -47,17 +47,29 @@ responses:
                 contacts:
                   type: array
                   items:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                      name:
-                        type: string
-                      email:
-                        type: string
-                      phone:
-                        type: string
-                      favorite:
-                        type: boolean
+                    $ref: '../../components/schemas/contact.yaml#/Contact'
+                total:
+                  type: integer
+                  example: 100
+                page:
+                  type: integer
+                  example: 1
+                limit:
+                  type: integer
+                  example: 10
+                totalPages:
+                  type: integer
+                  example: 10
   '401':
     description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Unauthorized

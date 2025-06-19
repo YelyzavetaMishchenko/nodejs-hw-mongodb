@@ -8,7 +8,7 @@ security:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         required:
@@ -47,6 +47,17 @@ responses:
               type: object
               properties:
                 contact:
-                  type: object
+                  $ref: '../../components/schemas/contact.yaml#/Contact'
   '400':
     description: Validation error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Validation failed

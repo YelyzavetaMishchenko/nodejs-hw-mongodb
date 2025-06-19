@@ -64,29 +64,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "type": "object",
-                          "properties": {
-                            "_id": {
-                              "type": "string",
-                              "example": "64b167857c7c4dbf7c4aefb2"
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "John Doe"
-                            },
-                            "email": {
-                              "type": "string",
-                              "example": "john@example.com"
-                            },
-                            "phone": {
-                              "type": "string",
-                              "example": "+1234567890"
-                            },
-                            "favorite": {
-                              "type": "boolean",
-                              "example": false
-                            }
-                          }
+                          "$ref": "#/components/schemas/contact_Contact"
                         }
                       }
                     }
@@ -96,7 +74,24 @@
             }
           },
           "404": {
-            "description": "Contact not found"
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -127,7 +122,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -173,7 +168,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "type": "object"
+                          "$ref": "#/components/schemas/contact_Contact"
                         }
                       }
                     }
@@ -183,10 +178,44 @@
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Contact not found"
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -215,28 +244,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Contact deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Contact deleted successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Contact not found"
+          "204": {
+            "description": "Contact deleted successfully, no content returned"
           }
         }
       }
@@ -308,25 +317,24 @@
                         "contacts": {
                           "type": "array",
                           "items": {
-                            "type": "object",
-                            "properties": {
-                              "_id": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              },
-                              "email": {
-                                "type": "string"
-                              },
-                              "phone": {
-                                "type": "string"
-                              },
-                              "favorite": {
-                                "type": "boolean"
-                              }
-                            }
+                            "$ref": "#/components/schemas/contact_Contact"
                           }
+                        },
+                        "total": {
+                          "type": "integer",
+                          "example": 100
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 10
                         }
                       }
                     }
@@ -336,7 +344,24 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -355,7 +380,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "required": [
@@ -406,7 +431,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "type": "object"
+                          "$ref": "#/components/schemas/contact_Contact"
                         }
                       }
                     }
@@ -416,13 +441,97 @@
             }
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation failed"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
+    "schemas": {
+      "Contact": {
+        "$ref": "#/components/schemas/contact"
+      },
+      "contact_Contact": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64b167857c7c4dbf7c4aefb2"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1234567890"
+          },
+          "favorite": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "contact": {
+        "Contact": {
+          "type": "object",
+          "required": [
+            "name",
+            "email",
+            "phone"
+          ],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "64b167857c7c4dbf7c4aefb2"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@example.com"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+1234567890"
+            },
+            "favorite": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",

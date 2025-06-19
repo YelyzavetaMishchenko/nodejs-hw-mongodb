@@ -26,6 +26,9 @@ paths:
     post:
       $ref: ../swagger/paths/contacts/post.yaml
 components:
+  schemas:
+    Contact:
+      $ref: ../swagger/components/schemas/contact.yaml
   securitySchemes:
     bearerAuth:
       type: http
