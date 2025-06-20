@@ -28,10 +28,20 @@ responses:
               type: string
               example: Contact found
             data:
-              type: object
-              properties:
-                contact:
-                  $ref: '../../../components/schemas/contact.yaml#/Contact'
+              $ref: '../../../components/schemas/contact.yaml#/Contact'
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Unauthorized
   '404':
     description: Contact not found
     content:

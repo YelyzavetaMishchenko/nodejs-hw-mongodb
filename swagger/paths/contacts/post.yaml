@@ -35,19 +35,7 @@ responses:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            status:
-              type: string
-              example: success
-            message:
-              type: string
-              example: Contact created successfully
-            data:
-              type: object
-              properties:
-                contact:
-                  $ref: '../../components/schemas/contact.yaml#/Contact'
+          $ref: '../../components/schemas/contact.yaml#/Contact'
   '400':
     description: Validation error
     content:
@@ -61,3 +49,16 @@ responses:
             message:
               type: string
               example: Validation failed
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Unauthorized

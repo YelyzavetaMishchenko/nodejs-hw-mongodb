@@ -15,4 +15,30 @@ parameters:
       example: 64b167857c7c4dbf7c4aefb2
 responses:
   '204':
-    description: Contact deleted successfully, no content returned
+    description: Contact deleted successfully
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Unauthorized
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Contact not found

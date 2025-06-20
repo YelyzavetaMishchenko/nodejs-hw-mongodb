@@ -29,7 +29,7 @@ parameters:
     description: Filter contacts by favorite status
 responses:
   '200':
-    description: List of contacts
+    description: List of contacts retrieved successfully
     content:
       application/json:
         schema:
@@ -57,9 +57,6 @@ responses:
                 limit:
                   type: integer
                   example: 10
-                totalPages:
-                  type: integer
-                  example: 10
   '401':
     description: Unauthorized
     content:
@@ -72,4 +69,4 @@ responses:
               example: error
             message:
               type: string
-              example: Unauthorized
+              example: Unauthorized access

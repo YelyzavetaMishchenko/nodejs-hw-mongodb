@@ -61,12 +61,27 @@
                       "example": "Contact found"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
-                        }
-                      }
+                      "$ref": "#/components/schemas/contact_Contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
                     }
                   }
                 }
@@ -165,12 +180,7 @@
                       "example": "Contact updated successfully"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
-                        }
-                      }
+                      "$ref": "#/components/schemas/contact_Contact"
                     }
                   }
                 }
@@ -191,6 +201,26 @@
                     "message": {
                       "type": "string",
                       "example": "Validation failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
                     }
                   }
                 }
@@ -245,7 +275,47 @@
         ],
         "responses": {
           "204": {
-            "description": "Contact deleted successfully, no content returned"
+            "description": "Contact deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -297,7 +367,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of contacts",
+            "description": "List of contacts retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -331,10 +401,6 @@
                         "limit": {
                           "type": "integer",
                           "example": 10
-                        },
-                        "totalPages": {
-                          "type": "integer",
-                          "example": 10
                         }
                       }
                     }
@@ -356,7 +422,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Unauthorized"
+                      "example": "Unauthorized access"
                     }
                   }
                 }
@@ -417,25 +483,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "success"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Contact created successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/contact_Contact"
                 }
               }
             }
@@ -454,6 +502,26 @@
                     "message": {
                       "type": "string",
                       "example": "Validation failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
                     }
                   }
                 }
