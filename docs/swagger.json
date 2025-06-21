@@ -64,7 +64,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
+                          "$ref": "#/components/schemas/Contact"
                         }
                       }
                     }
@@ -188,7 +188,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
+                          "$ref": "#/components/schemas/Contact"
                         }
                       }
                     }
@@ -397,7 +397,7 @@
                         "contacts": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/contact_Contact"
+                            "$ref": "#/components/schemas/Contact"
                           }
                         },
                         "total": {
@@ -507,7 +507,7 @@
                       "type": "object",
                       "properties": {
                         "contact": {
-                          "$ref": "#/components/schemas/contact_Contact"
+                          "$ref": "#/components/schemas/Contact"
                         }
                       }
                     }
@@ -529,7 +529,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Validation error"
+                      "example": "Validation failed"
                     }
                   }
                 }
@@ -563,9 +563,6 @@
   "components": {
     "schemas": {
       "Contact": {
-        "$ref": "#/components/schemas/contact"
-      },
-      "contact_Contact": {
         "type": "object",
         "required": [
           "name",
@@ -592,38 +589,6 @@
           "favorite": {
             "type": "boolean",
             "example": false
-          }
-        }
-      },
-      "contact": {
-        "Contact": {
-          "type": "object",
-          "required": [
-            "name",
-            "email",
-            "phone"
-          ],
-          "properties": {
-            "_id": {
-              "type": "string",
-              "example": "64b167857c7c4dbf7c4aefb2"
-            },
-            "name": {
-              "type": "string",
-              "example": "John Doe"
-            },
-            "email": {
-              "type": "string",
-              "example": "john@example.com"
-            },
-            "phone": {
-              "type": "string",
-              "example": "+1234567890"
-            },
-            "favorite": {
-              "type": "boolean",
-              "example": false
-            }
           }
         }
       }
