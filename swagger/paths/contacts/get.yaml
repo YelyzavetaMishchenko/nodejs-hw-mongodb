@@ -69,4 +69,4 @@ responses:
               example: error
             message:
               type: string
-              example: Unauthorized access
+              example: Unauthorized

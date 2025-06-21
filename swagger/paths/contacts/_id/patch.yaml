@@ -35,7 +35,7 @@ requestBody:
             example: true
 responses:
   '200':
-    description: Contact updated
+    description: Contact updated successfully
     content:
       application/json:
         schema:
@@ -48,7 +48,10 @@ responses:
               type: string
               example: Contact updated successfully
             data:
-              $ref: '../../../components/schemas/contact.yaml#/Contact'
+              type: object
+              properties:
+                contact:
+                  $ref: '../../../components/schemas/contact.yaml#/Contact'
   '400':
     description: Invalid input
     content:
@@ -61,7 +64,7 @@ responses:
               example: error
             message:
               type: string
-              example: Validation failed
+              example: Invalid input
   '401':
     description: Unauthorized
     content:

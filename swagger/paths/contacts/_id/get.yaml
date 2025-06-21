@@ -28,7 +28,10 @@ responses:
               type: string
               example: Contact found
             data:
-              $ref: '../../../components/schemas/contact.yaml#/Contact'
+              type: object
+              properties:
+                contact:
+                  $ref: '../../../components/schemas/contact.yaml#/Contact'
   '401':
     description: Unauthorized
     content:
