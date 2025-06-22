@@ -7,7 +7,7 @@ const contactSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    phoneNumber: {
+    phone: {
       type: String,
       required: true,
       trim: true,
@@ -16,7 +16,7 @@ const contactSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    isFavourite: {
+    favorite: {
       type: Boolean,
       default: false,
     },
@@ -24,9 +24,6 @@ const contactSchema = new mongoose.Schema(
       type: String,
       enum: ['work', 'home', 'personal'],
       default: 'personal',
-    },
-    photo: {
-      type: String,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

@@ -77,7 +77,9 @@ export const getContactById = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Success',
-    data: result,
+    data: {
+      data: result,
+    },
   });
 };
 
@@ -99,7 +101,9 @@ export const createContact = async (req, res) => {
   res.status(201).json({
     status: 201,
     message: 'Contact created successfully',
-    data: result,
+    data: {
+      data: result,
+    },
   });
 };
 
@@ -139,7 +143,9 @@ export const updateContact = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Contact updated successfully',
-    data: contact,
+    data: {
+      data: contact,
+    },
   });
 };
 
@@ -157,7 +163,9 @@ export const updateStatusContact = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully updated the contact status!',
-    data: contact,
+    data: {
+      data: contact,
+    },
   });
 };
 
